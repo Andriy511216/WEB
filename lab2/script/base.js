@@ -87,3 +87,7 @@ const profiles = [
     ],
   },
 ];
+
+if (!localStorage.getItem('allUsers')) {
+  localStorage.setItem('allUsers', JSON.stringify(profiles));
+}

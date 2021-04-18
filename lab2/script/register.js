@@ -32,6 +32,9 @@ const contactsRegisterMale = document.querySelector('.gender-male-check');
 const contactsRegisterFemale = document.querySelector('.gender-female-check');
 const contactsRegisterBtn = document.querySelector('.registerBtn');
 const newProfile = {};
+
+const allUsersReg = JSON.parse(localStorage.getItem('allUsers'));
+console.log(allUsersReg);
 contactsRegisterBtn.addEventListener('click', function (e) {
   e.preventDefault();
 
@@ -58,8 +61,11 @@ contactsRegisterBtn.addEventListener('click', function (e) {
       newProfile.gender = gender;
       newProfile.birthday = contactsRegisterBirthday.value;
       newProfile.contacts = [];
+      allUsersReg.push(newProfile);
+      localStorage.setItem('allUsers', JSON.stringify(allUsersReg));
+      console.log(newProfile);
+      console.log(JSON.parse(localStorage.getItem('allUsers')));
       document.location.href = './login.html';
     }
   }
-  console.log(newProfile);
 });

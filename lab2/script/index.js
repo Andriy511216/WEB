@@ -1,6 +1,9 @@
 'use strict';
-
-let CURRENT_ACCOUNT = localStorage.getItem('currentUser');
+if (!localStorage.getItem('currentUserIndex')) {
+  localStorage.setItem('currentUserIndex', -1);
+}
+const CURRENT_ACCOUNT = localStorage.getItem('currentUserIndex');
+const allUsersProfiles = JSON.parse(localStorage.getItem('allUsers'));
 
 const contactsTableBody = document.querySelector('.contacts-main');
 const contactsTable = document.querySelector('table');
@@ -40,9 +43,10 @@ function checkName(name) {
 }
 
 function showContacts(profileContacts) {
-  contactsTableBody.innerHTML = '';
-  profileContacts.forEach((item) => {
-    contactsTableBody.innerHTML += `
+  if (contactsTableBody !== null && typeof profileContacts !== 'undefined') {
+    contactsTableBody.innerHTML = '';
+    profileContacts.forEach((item) => {
+      contactsTableBody.innerHTML += `
     <tr>
         <th scope="row">${item.contactsId}</th>
         <td>${item.contactsName}</td>
@@ -54,7 +58,8 @@ function showContacts(profileContacts) {
         </td>
     </tr>
       `;
-  });
+    });
+  }
 }
 
 function contactsDeleteRow(e) {
@@ -64,11 +69,14 @@ function contactsDeleteRow(e) {
   const btn = e.target;
   btn.closest('tr').remove();
 
-  const indexRemoved = this.contacts.findIndex((elem) => elem.contactsId === +btn.id);
+  const indexRemoved = this[CURRENT_ACCOUNT].contacts.findIndex(
+    (elem) => elem.contactsId === +btn.id
+  );
 
   if (indexRemoved !== -1) {
-    this.contacts.splice(indexRemoved, 1);
+    this[CURRENT_ACCOUNT].contacts.splice(indexRemoved, 1);
   }
+  localStorage.setItem('allUsers', JSON.stringify(this));
 }
 
 function contactsAddRow(e) {
@@ -76,26 +84,34 @@ function contactsAddRow(e) {
 
   if (!checkName(contactsInputName.value)) return;
   if (!checkPhone(contactsInputPhone.value)) return;
-  this.contacts.push({
-    contactsId: this.contacts[this.contacts.length - 1]['contactsId'] + 1,
+  this[CURRENT_ACCOUNT].contacts.push({
+    contactsId:
+      this[CURRENT_ACCOUNT].contacts[this[CURRENT_ACCOUNT].contacts.length - 1]['contactsId'] + 1,
     contactsName: contactsInputName.value,
     contactsPhone: contactsInputPhone.value,
   });
 
   contactsTableBody.innerHTML += `
     <tr>
-        <th scope="row">${this.contacts[this.contacts.length - 1].contactsId}</th>
-        <td>${this.contacts[this.contacts.length - 1].contactsName}</td>
-        <td>+${this.contacts[this.contacts.length - 1].contactsPhone}</td>
+        <th scope="row">${
+          this[CURRENT_ACCOUNT].contacts[this[CURRENT_ACCOUNT].contacts.length - 1].contactsId
+        }</th>
+        <td>${
+          this[CURRENT_ACCOUNT].contacts[this[CURRENT_ACCOUNT].contacts.length - 1].contactsName
+        }</td>
+        <td>+${
+          this[CURRENT_ACCOUNT].contacts[this[CURRENT_ACCOUNT].contacts.length - 1].contactsPhone
+        }</td>
         <td>
             <button id = ${
-              this.contacts[this.contacts.length - 1].contactsId
+              this[CURRENT_ACCOUNT].contacts[this[CURRENT_ACCOUNT].contacts.length - 1].contactsId
             } class="btn btn-danger col-md-3 delete-contacts-btn">
                 &#128465;
             </button>
         </td>
     </tr>
       `;
+  localStorage.setItem('allUsers', JSON.stringify(this));
   contactsInputName.value = '';
   contactsInputPhone.value = '';
 }
@@ -136,37 +152,50 @@ function contactsSearchRows() {
 }
 
 function contactsChangeRow() {
-  if (!checkName(contactsNameToChange.value)) return;
-  if (!checkPhone(contactsPhoneToChange.value)) return;
-  if (contactsIdToChange.value === '') return;
+  if (
+    !checkName(contactsNameToChange.value) ||
+    !checkPhone(contactsPhoneToChange.value) ||
+    contactsIdToChange.value === ''
+  ) {
+    return;
+  }
+
   let rIndexToChange = -1;
-  for (let i = 0; i < this.contacts.length; i++) {
-    if (+contactsIdToChange.value === this.contacts[i].contactsId) {
+  for (let i = 0; i < this[CURRENT_ACCOUNT].contacts.length; i++) {
+    if (+contactsIdToChange.value === this[CURRENT_ACCOUNT].contacts[i].contactsId) {
       rIndexToChange = i;
     }
   }
   if (rIndexToChange === -1) return;
-  this.contacts[rIndexToChange].contactsName = contactsNameToChange.value;
-  this.contacts[rIndexToChange].contactsPhone = contactsPhoneToChange.value;
+  this[CURRENT_ACCOUNT].contacts[rIndexToChange].contactsName = contactsNameToChange.value;
+  this[CURRENT_ACCOUNT].contacts[rIndexToChange].contactsPhone = contactsPhoneToChange.value;
   contactsNameToChange.value = '';
   contactsPhoneToChange.value = '';
-  showContacts(this.contacts);
-}
-
-function loginProfile(e) {
-  e.preventDefault();
-  console.log('clicked');
+  showContacts(this[CURRENT_ACCOUNT].contacts);
+  localStorage.setItem('allUsers', JSON.stringify(this));
 }
 
 if (CURRENT_ACCOUNT !== -1) {
-  contactsAddBtn?.addEventListener('click', contactsAddRow.bind(profiles[CURRENT_ACCOUNT]));
-  contactsSearchInput?.addEventListener(
-    'keyup',
-    contactsSearchRows.bind(profiles[CURRENT_ACCOUNT])
-  );
-  contactsTableBody?.addEventListener('click', contactsDeleteRow.bind(profiles[CURRENT_ACCOUNT]));
-  contactsSortBtn?.addEventListener('click', contactsSortRow.bind(profiles[CURRENT_ACCOUNT]));
-  contactsChangeBtn?.addEventListener('click', contactsChangeRow.bind(profiles[CURRENT_ACCOUNT]));
+  if (contactsAddBtn !== null) {
+    contactsAddBtn.addEventListener('click', contactsAddRow.bind(allUsersProfiles));
+  }
 
-  showContacts(profiles[CURRENT_ACCOUNT].contacts);
+  if (contactsSearchInput !== null)
+    contactsSearchInput.addEventListener(
+      'keyup',
+      contactsSearchRows.bind(allUsersProfiles[CURRENT_ACCOUNT])
+    );
+  if (contactsTableBody !== null) {
+    contactsTableBody.addEventListener('click', contactsDeleteRow.bind(allUsersProfiles));
+  }
+
+  if (contactsSortBtn !== null)
+    contactsSortBtn.addEventListener(
+      'click',
+      contactsSortRow.bind(allUsersProfiles[CURRENT_ACCOUNT])
+    );
+  if (contactsChangeBtn !== null) {
+    contactsChangeBtn.addEventListener('click', contactsChangeRow.bind(allUsersProfiles));
+  }
+  if (CURRENT_ACCOUNT > -1) showContacts(allUsersProfiles[CURRENT_ACCOUNT].contacts);
 }
