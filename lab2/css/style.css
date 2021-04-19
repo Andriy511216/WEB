@@ -105,3 +105,7 @@ body {
 .contacts-id-change {
   max-width: 60px;
 }
+
+.profile-is-login {
+  display: none;
+}
