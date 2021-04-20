@@ -91,3 +91,7 @@ const profiles = [
 if (!localStorage.getItem('allUsers')) {
   localStorage.setItem('allUsers', JSON.stringify(profiles));
 }
+
+if (!localStorage.getItem('currentUserIndex')) {
+  localStorage.setItem('currentUserIndex', -1);
+}
