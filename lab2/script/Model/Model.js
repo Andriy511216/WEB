@@ -13,21 +13,21 @@ function contactsSearchRowsHelper(value, profileContacts) {
 }
 function checkPhone(number) {
   if (!(number.length === 12 && !isNaN(number))) {
-    alert('Incorrect phone: length should equal 12');
+    alert("Incorrect phone: length should equal 12");
     return false;
   }
   return true;
 }
 function checkName(name) {
   if (name.length < 4) {
-    alert('Too short name');
+    alert("Too short name");
     return false;
   }
   return true;
 }
 function checkPassword(password) {
   if (password.length < 6) {
-    alert('Too short password');
+    alert("Too short password");
     return false;
   }
   return true;
@@ -35,12 +35,14 @@ function checkPassword(password) {
 
 class Model {
   constructor() {
-    this.currentUserIndex = localStorage.getItem('currentUserIndex');
-    this.allUsers = JSON.parse(localStorage.getItem('allUsers'));
+    this.currentUserIndex = localStorage.getItem("currentUserIndex");
+    this.allUsers = JSON.parse(localStorage.getItem("allUsers"));
   }
 
   contactsSearch = () => {
-    const contactsSearchInput = document.querySelector('.search-contacts-input');
+    const contactsSearchInput = document.querySelector(
+      ".search-contacts-input"
+    );
     return contactsSearchRowsHelper(
       contactsSearchInput.value,
       this.allUsers[this.currentUserIndex].contacts
@@ -48,27 +50,27 @@ class Model {
   };
 
   contactsDelete = (e) => {
-    if (!e.target.classList.contains('delete-contacts-btn')) {
+    if (!e.target.classList.contains("delete-contacts-btn")) {
       return;
     }
     const btn = e.target;
-    btn.closest('tr').remove();
+    btn.closest("tr").remove();
 
-    const indexRemoved = this.allUsers[this.currentUserIndex].contacts.findIndex(
-      (elem) => elem.contactsId === +btn.id
-    );
+    const indexRemoved = this.allUsers[
+      this.currentUserIndex
+    ].contacts.findIndex((elem) => elem.contactsId === +btn.id);
 
     if (indexRemoved !== -1) {
       this.allUsers[this.currentUserIndex].contacts.splice(indexRemoved, 1);
     }
-    localStorage.setItem('allUsers', JSON.stringify(this.allUsers));
+    localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
   };
 
   contactsAdd = (e) => {
     e.preventDefault();
 
-    const contactsInputName = document.querySelector('.contacts-input-name');
-    const contactsInputPhone = document.querySelector('.contacts-input-phone');
+    const contactsInputName = document.querySelector(".contacts-input-name");
+    const contactsInputPhone = document.querySelector(".contacts-input-phone");
     if (!checkName(contactsInputName.value)) return;
     if (!checkPhone(contactsInputPhone.value)) return;
 
@@ -78,11 +80,11 @@ class Model {
           ? 1
           : this.allUsers[this.currentUserIndex].contacts[
               this.allUsers[this.currentUserIndex].contacts.length - 1
-            ]['contactsId'] + 1,
+            ]["contactsId"] + 1,
       contactsName: contactsInputName.value,
       contactsPhone: contactsInputPhone.value,
     });
-    const contactsTableBody = document.querySelector('.contacts-main');
+    const contactsTableBody = document.querySelector(".contacts-main");
     contactsTableBody.innerHTML += `
       <tr>
           <th scope="row">${
@@ -111,107 +113,131 @@ class Model {
           </td>
       </tr>
         `;
-    localStorage.setItem('allUsers', JSON.stringify(this.allUsers));
-    contactsInputName.value = '';
-    contactsInputPhone.value = '';
+    localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
+    contactsInputName.value = "";
+    contactsInputPhone.value = "";
   };
 
   contactsChange = () => {
-    const contactsIdToChange = document.querySelector('.contacts-id-change');
-    const contactsNameToChange = document.querySelector('.contacts-name-change');
-    const contactsPhoneToChange = document.querySelector('.contacts-phone-change');
+    const contactsIdToChange = document.querySelector(".contacts-id-change");
+    const contactsNameToChange = document.querySelector(
+      ".contacts-name-change"
+    );
+    const contactsPhoneToChange = document.querySelector(
+      ".contacts-phone-change"
+    );
     if (
       !checkName(contactsNameToChange.value) ||
       !checkPhone(contactsPhoneToChange.value) ||
-      contactsIdToChange.value === ''
+      contactsIdToChange.value === ""
     ) {
       return;
     }
 
     let rIndexToChange = -1;
-    for (let i = 0; i < this.allUsers[this.currentUserIndex].contacts.length; i++) {
+    for (
+      let i = 0;
+      i < this.allUsers[this.currentUserIndex].contacts.length;
+      i++
+    ) {
       if (
-        +contactsIdToChange.value === this.allUsers[this.currentUserIndex].contacts[i].contactsId
+        +contactsIdToChange.value ===
+        this.allUsers[this.currentUserIndex].contacts[i].contactsId
       ) {
         rIndexToChange = i;
       }
     }
     if (rIndexToChange === -1) {
-      console.log('sosi1');
+      console.log("sosi1");
       return;
     }
     this.allUsers[this.currentUserIndex].contacts[rIndexToChange].contactsName =
       contactsNameToChange.value;
-    this.allUsers[this.currentUserIndex].contacts[rIndexToChange].contactsPhone =
-      contactsPhoneToChange.value;
-    contactsNameToChange.value = '';
-    contactsPhoneToChange.value = '';
-    localStorage.setItem('allUsers', JSON.stringify(this.allUsers));
+    this.allUsers[this.currentUserIndex].contacts[
+      rIndexToChange
+    ].contactsPhone = contactsPhoneToChange.value;
+    contactsNameToChange.value = "";
+    contactsPhoneToChange.value = "";
+    localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
     return this.allUsers[this.currentUserIndex].contacts;
   };
   //sort
   contactsSort = () => {
-    const contactsTableBody = document.querySelector('.contacts-main');
+    const contactsTableBody = document.querySelector(".contacts-main");
     if (isSortedByName) {
       isSortedByName = false;
-      contactsTableBody.innerHTML = '';
+      contactsTableBody.innerHTML = "";
       return this.allUsers[this.currentUserIndex].contacts;
     }
     isSortedByName = true;
-    const arrayToSort = this.allUsers[this.currentUserIndex].contacts.slice().sort((a, b) => {
-      return a.contactsName.toLowerCase() > b.contactsName.toLowerCase() ? 1 : -1;
-    });
-    contactsTableBody.innerHTML = '';
+    const arrayToSort = this.allUsers[this.currentUserIndex].contacts
+      .slice()
+      .sort((a, b) => {
+        return a.contactsName.toLowerCase() > b.contactsName.toLowerCase()
+          ? 1
+          : -1;
+      });
+    contactsTableBody.innerHTML = "";
     return arrayToSort;
   };
 
   loginProfile = () => {
     let currentAcc = -1;
     let currentAccIndex = -1;
-    const contactsLoginEmail = document.getElementById('loginEmail');
-    const contactsLoginPassword = document.getElementById('loginPassword');
-    const contactsCheckMe = document.querySelector('.login-check-input');
+    const contactsLoginEmail = document.getElementById("loginEmail");
+    const contactsLoginPassword = document.getElementById("loginPassword");
+    const contactsCheckMe = document.querySelector(".login-check-input");
     if (contactsCheckMe.checked) {
-      currentAcc = this.allUsers.find((acc) => acc.email === contactsLoginEmail.value);
-      if (typeof currentAcc === 'undefined') {
+      currentAcc = this.allUsers.find(
+        (acc) => acc.email === contactsLoginEmail.value
+      );
+      if (typeof currentAcc === "undefined") {
         alert("Acc with this email dosen't exist ");
         return;
       } else {
-        currentAccIndex = this.allUsers.findIndex((acc) => acc.email === contactsLoginEmail.value);
+        currentAccIndex = this.allUsers.findIndex(
+          (acc) => acc.email === contactsLoginEmail.value
+        );
         if (currentAcc.password === contactsLoginPassword.value) {
-          localStorage.setItem('currentUserIndex', currentAccIndex);
-          document.location.href = './contacts.html';
+          localStorage.setItem("currentUserIndex", currentAccIndex);
+          document.location.href = "./contacts.html";
         } else {
-          alert('Wrong password');
-          contactsLoginPassword.value = '';
+          alert("Wrong password");
+          contactsLoginPassword.value = "";
           return;
         }
       }
     } else {
-      alert('Check the box');
+      alert("Check the box");
     }
   };
 
   logoutProfile = () => {
-    const loginLink = document.querySelector('.nav-item-login');
-    if (+localStorage.getItem('currentUserIndex') !== -1) {
-      loginLink.innerHTML = 'LOGOUT';
+    const loginLink = document.querySelector(".nav-item-login");
+    if (+localStorage.getItem("currentUserIndex") !== -1) {
+      loginLink.innerHTML = "LOGOUT";
     }
   };
 
   registrProfile = () => {
-    const contactsRegisterEmail = document.getElementById('registerEmail');
-    const contactsRegisterPhone = document.getElementById('registerPhone');
-    const contactsRegisterPassword = document.getElementById('registerPassword');
-    const contactsRegisterBirthday = document.getElementById('registerBirthday');
-    const contactsRegisterMale = document.querySelector('.gender-male-check');
-    const contactsRegisterFemale = document.querySelector('.gender-female-check');
+    const contactsRegisterEmail = document.getElementById("registerEmail");
+    const contactsRegisterPhone = document.getElementById("registerPhone");
+    const contactsRegisterPassword = document.getElementById(
+      "registerPassword"
+    );
+    const contactsRegisterBirthday = document.getElementById(
+      "registerBirthday"
+    );
+    const contactsRegisterMale = document.querySelector(".gender-male-check");
+    const contactsRegisterFemale = document.querySelector(
+      ".gender-female-check"
+    );
     let gender = -1;
     const newProfile = {};
     if (checkPhone(contactsRegisterPhone.value)) {
       if (checkPassword(contactsRegisterPassword.value)) {
-        if (contactsRegisterBirthday.value === '') {
-          alert('Select your birthday');
+        if (contactsRegisterBirthday.value === "") {
+          alert("Select your birthday");
           return;
         }
         if (contactsRegisterMale.checked) {
@@ -219,19 +245,19 @@ class Model {
         } else if (contactsRegisterFemale.checked) {
           gender = contactsRegisterFemale.id;
         } else {
-          alert('Select yours gender');
+          alert("Select yours gender");
           return;
         }
         newProfile.email = contactsRegisterEmail.value;
-        newProfile.name = 'user';
+        newProfile.name = "user";
         newProfile.phone = contactsRegisterPhone.value;
         newProfile.password = contactsRegisterPassword.value;
         newProfile.gender = gender;
         newProfile.birthday = contactsRegisterBirthday.value;
         newProfile.contacts = [];
         this.allUsers.push(newProfile);
-        localStorage.setItem('allUsers', JSON.stringify(this.allUsers));
-        document.location.href = './login.html';
+        localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
+        document.location.href = "./login.html";
       }
     }
   };
