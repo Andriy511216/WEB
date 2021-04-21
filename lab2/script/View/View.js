@@ -7,11 +7,8 @@ class View {
     this.profileBirthdate = document.querySelector('.profile-birthday');
     this.profileGender = document.querySelector('.profile-gender');
     this.profileLogger = document.querySelector('.profile-logger');
-    this.currentUserIndexView = localStorage.getItem('currentUserIndex');
-    this.allUsersView = localStorage.getItem('allUsers');
   }
 
-  //showContacts
   showContacts = (profileContacts) => {
     if (this.contactsTableBody !== null && typeof profileContacts !== 'undefined') {
       this.contactsTableBody.innerHTML = '';
@@ -31,7 +28,7 @@ class View {
       });
     }
   };
-  //showProfile
+
   showProfile = (currentUserIndexView, allUsersView) => {
     if (+currentUserIndexView === -1) {
       this.profileLogger.classList.remove('profile-is-login');

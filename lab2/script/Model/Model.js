@@ -38,11 +38,7 @@ class Model {
     this.currentUserIndex = localStorage.getItem('currentUserIndex');
     this.allUsers = JSON.parse(localStorage.getItem('allUsers'));
   }
-  showInfo = () => {
-    console.log(this.currentUserIndex);
-    console.log(this.allUsers);
-  };
-  //searchrow
+
   contactsSearch = () => {
     const contactsSearchInput = document.querySelector('.search-contacts-input');
     return contactsSearchRowsHelper(
@@ -50,7 +46,7 @@ class Model {
       this.allUsers[this.currentUserIndex].contacts
     );
   };
-  //delete --- done
+
   contactsDelete = (e) => {
     if (!e.target.classList.contains('delete-contacts-btn')) {
       return;
@@ -67,7 +63,7 @@ class Model {
     }
     localStorage.setItem('allUsers', JSON.stringify(this.allUsers));
   };
-  //add --- done
+
   contactsAdd = (e) => {
     e.preventDefault();
 
@@ -119,7 +115,7 @@ class Model {
     contactsInputName.value = '';
     contactsInputPhone.value = '';
   };
-  //change --- done
+
   contactsChange = () => {
     const contactsIdToChange = document.querySelector('.contacts-id-change');
     const contactsNameToChange = document.querySelector('.contacts-name-change');
@@ -153,7 +149,7 @@ class Model {
     localStorage.setItem('allUsers', JSON.stringify(this.allUsers));
     return this.allUsers[this.currentUserIndex].contacts;
   };
-  //sort --- done
+  //sort
   contactsSort = () => {
     const contactsTableBody = document.querySelector('.contacts-main');
     if (isSortedByName) {
@@ -168,7 +164,7 @@ class Model {
     contactsTableBody.innerHTML = '';
     return arrayToSort;
   };
-  //login
+
   loginProfile = () => {
     let currentAcc = -1;
     let currentAccIndex = -1;
@@ -195,14 +191,14 @@ class Model {
       alert('Check the box');
     }
   };
-  //logout
+
   logoutProfile = () => {
     const loginLink = document.querySelector('.nav-item-login');
     if (+localStorage.getItem('currentUserIndex') !== -1) {
       loginLink.innerHTML = 'LOGOUT';
     }
   };
-  //registration
+
   registrProfile = () => {
     const contactsRegisterEmail = document.getElementById('registerEmail');
     const contactsRegisterPhone = document.getElementById('registerPhone');

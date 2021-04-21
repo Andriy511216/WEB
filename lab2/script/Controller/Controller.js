@@ -4,7 +4,6 @@ class Controller {
     this.model = new Model();
   }
   contactsAddHandler = () => {
-    //---------------------------------------------------------------------DONE
     if (+this.model.currentUserIndex !== -1) {
       const contactsAddBtn = document.querySelector('.add-contacts-btn');
       contactsAddBtn.addEventListener('click', this.model.contactsAdd);
@@ -12,7 +11,6 @@ class Controller {
   };
 
   contactsDeleteHandler = () => {
-    //---------------------------------------------------------------------DONE
     if (+this.model.currentUserIndex !== -1) {
       const contactsTableBody = document.querySelector('.contacts-main');
       contactsTableBody.addEventListener('click', this.model.contactsDelete);
@@ -20,7 +18,6 @@ class Controller {
   };
 
   contactsChangeHandler = () => {
-    //---------------------------------------------------------------------DONE
     if (+this.model.currentUserIndex !== -1) {
       const contactsChangeBtn = document.querySelector('.change-contacts-btn');
       contactsChangeBtn.addEventListener('click', () => {
@@ -39,7 +36,6 @@ class Controller {
   };
 
   contactsSearchHandler = () => {
-    //---------------------------------------------------------------------DONE
     if (+this.model.currentUserIndex !== -1) {
       const contactsSearchInput = document.querySelector('.search-contacts-input');
       contactsSearchInput.addEventListener('keyup', () => {
@@ -49,7 +45,6 @@ class Controller {
   };
 
   firstShowContacts = () => {
-    //---------------------------------------------------------------------DONE
     if (+this.model.currentUserIndex !== -1) {
       this.view.showContacts(this.model.allUsers[this.model.currentUserIndex].contacts);
     }
@@ -65,7 +60,6 @@ class Controller {
   };
 
   profileLoginHandler = () => {
-    //---------------------------------------------------------------------DONE
     const contactsLoginBtn = document.getElementById('profile-login-btn');
     contactsLoginBtn.addEventListener('click', (e) => {
       e.preventDefault();
